@@ -31,9 +31,11 @@ const STEPS = ["Setup", "Content", "Brand"];
 
 function Label({ children, hint }: { children: React.ReactNode; hint?: string }) {
   return (
-    <div className="mb-1.5">
-      <p className="text-sm font-medium text-gray-800">{children}</p>
-      {hint && <p className="text-xs text-gray-400 mt-0.5">{hint}</p>}
+    <div className="mb-3">
+      <p className="text-sm font-semibold" style={{ color: "#0F172A", fontFamily: "Philosopher, system-ui, sans-serif" }}>
+        {children}
+      </p>
+      {hint && <p className="text-xs mt-1" style={{ color: "#64748B" }}>{hint}</p>}
     </div>
   );
 }
@@ -42,7 +44,20 @@ function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
       {...props}
-      className="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+      className="w-full border rounded-lg px-4 py-3 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 transition-all"
+      style={{
+        borderColor: "#E2E8F0",
+        backgroundColor: "#FFFFFF",
+        color: "#0F172A",
+      }}
+      onFocus={(e) => {
+        e.currentTarget.style.borderColor = "#3B82F6";
+        e.currentTarget.style.boxShadow = "0 0 0 3px rgba(59, 130, 246, 0.1)";
+      }}
+      onBlur={(e) => {
+        e.currentTarget.style.borderColor = "#E2E8F0";
+        e.currentTarget.style.boxShadow = "none";
+      }}
     />
   );
 }
@@ -50,9 +65,22 @@ function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
 function Textarea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <textarea
-      rows={4}
+      rows={5}
       {...props}
-      className="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors resize-none"
+      className="w-full border rounded-lg px-4 py-3 text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 transition-all resize-none font-family-base"
+      style={{
+        borderColor: "#E2E8F0",
+        backgroundColor: "#FFFFFF",
+        color: "#0F172A",
+      }}
+      onFocus={(e) => {
+        e.currentTarget.style.borderColor = "#3B82F6";
+        e.currentTarget.style.boxShadow = "0 0 0 3px rgba(59, 130, 246, 0.1)";
+      }}
+      onBlur={(e) => {
+        e.currentTarget.style.borderColor = "#E2E8F0";
+        e.currentTarget.style.boxShadow = "none";
+      }}
     />
   );
 }
@@ -137,7 +165,7 @@ export default function CreatePage() {
 
       const res = await createAgent(userId, {
         name: agentName.trim() || "My Blog Agent",
-        scenario: mode === "website" ? "website" : "themed",
+        scenario: mode === "website" ? "website" : "data",
         website_url: mode === "website" ? websiteUrl.trim() : undefined,
         themes,
         duration_months: duration,
@@ -159,81 +187,120 @@ export default function CreatePage() {
   const durationLabel = duration < 1 ? "2 weeks" : `${duration} month${duration !== 1 ? "s" : ""}`;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={{ backgroundColor: "#F8FAFC" }}>
       <AppNav />
 
-      <div className="max-w-xl mx-auto px-5 py-10">
+      <div className="max-w-2xl mx-auto px-6 py-12">
 
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-xl font-bold text-black">New blog agent</h1>
-            <p className="text-sm text-gray-400 mt-0.5">AI generates your full content calendar.</p>
-          </div>
+        <div className="mb-12">
+          <h1 className="text-4xl font-bold mb-2" style={{ color: "#0F172A", fontFamily: "Philosopher, system-ui, sans-serif" }}>
+            Create a blog agent
+          </h1>
+          <p className="text-lg" style={{ color: "#64748B" }}>
+            Let AI build your content calendar. Answer a few questions and we'll generate a 3-month plan.
+          </p>
           {agentsRemaining !== null && (
-            <span className={`text-xs font-medium px-2.5 py-1 rounded-full border ${
-              agentsRemaining === 0
-                ? "text-red-500 bg-red-50 border-red-200"
-                : "text-gray-500 bg-white border-gray-200"
-            }`}>
-              {agentsRemaining} slot{agentsRemaining !== 1 ? "s" : ""} left
-            </span>
+            <div className="mt-4">
+              <span className={`inline-block text-xs font-semibold px-3 py-1.5 rounded-full ${
+                agentsRemaining === 0
+                  ? "text-red-600 bg-red-50"
+                  : "text-emerald-600 bg-emerald-50"
+              }`}>
+                {agentsRemaining === 0 
+                  ? "⚠ Limit reached: 3/3" 
+                  : `${agentsRemaining} agent${agentsRemaining !== 1 ? "s" : ""} remaining`}
+              </span>
+            </div>
           )}
         </div>
 
         {agentsRemaining === 0 ? (
-          <div className="bg-white border border-red-200 rounded-xl p-6 text-center">
-            <p className="text-sm font-semibold text-red-600 mb-1">Agent limit reached</p>
-            <p className="text-xs text-gray-400 mb-4">You have 3 / 3 agents. Delete one to create a new agent.</p>
-            <a href="/agents" className="text-sm font-medium text-blue-600 hover:underline">Manage agents →</a>
+          <div className="bg-white border rounded-xl p-8 text-center" style={{ borderColor: "#E2E8F0" }}>
+            <p className="text-lg font-semibold mb-2" style={{ color: "#DC2626" }}>Agent limit reached</p>
+            <p className="text-base mb-6" style={{ color: "#64748B" }}>You've created 3 agents. Delete one to create a new agent.</p>
+            <a href="/agents" className="inline-block text-base font-semibold px-6 py-2.5 rounded-lg hover:opacity-90 transition-opacity" style={{ backgroundColor: "#3B82F6", color: "#FFFFFF" }}>
+              Manage agents
+            </a>
           </div>
         ) : (
           <>
-            {/* Step indicator */}
-            <div className="flex items-center gap-2 mb-7">
-              {STEPS.map((s, i) => (
-                <div key={s} className="flex items-center gap-2">
-                  <button type="button" onClick={() => i < step && setStep(i)}
-                    className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${
-                      i === step ? "text-blue-600" : i < step ? "text-gray-400 hover:text-gray-600 cursor-pointer" : "text-gray-300"
-                    }`}>
-                    <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold border transition-colors ${
-                      i === step ? "bg-blue-600 border-blue-600 text-white"
-                      : i < step ? "bg-gray-100 border-gray-200 text-gray-500"
-                      : "border-gray-200 text-gray-300"
-                    }`}>{i + 1}</span>
-                    {s}
-                  </button>
-                  {i < STEPS.length - 1 && <div className={`h-px w-6 ${i < step ? "bg-gray-300" : "bg-gray-100"}`} />}
-                </div>
-              ))}
+            {/* Step indicator - Modern minimalist design */}
+            <div className="mb-12">
+              <div className="flex items-center justify-between" style={{ maxWidth: "100%" }}>
+                {STEPS.map((s, i) => (
+                  <div key={s} className="flex items-center flex-1">
+                    <div className="flex flex-col items-center flex-1">
+                      <button 
+                        type="button" 
+                        onClick={() => i < step && setStep(i)}
+                        className="flex flex-col items-center w-full transition-opacity hover:opacity-75"
+                        disabled={i > step}
+                      >
+                        <div 
+                          className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-semibold transition-all mb-2 flex-shrink-0"
+                          style={{
+                            backgroundColor: i <= step ? "#3B82F6" : "#E2E8F0",
+                            color: i <= step ? "#FFFFFF" : "#94A3B8",
+                          }}
+                        >
+                          {i + 1}
+                        </div>
+                        <span 
+                          className="text-sm font-semibold text-center"
+                          style={{ color: i === step ? "#0F172A" : "#64748B" }}
+                        >
+                          {s}
+                        </span>
+                      </button>
+                    </div>
+                    {i < STEPS.length - 1 && (
+                      <div 
+                        className="h-0.5 flex-1 mx-3 mt-6"
+                        style={{ backgroundColor: i < step ? "#3B82F6" : "#E2E8F0" }}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm space-y-6">
+            <div className="bg-white border rounded-2xl p-8 shadow-sm" style={{ borderColor: "#E2E8F0" }}>
+              <div className="space-y-8">
 
               {/* ── STEP 0: Setup ── */}
               {step === 0 && (
                 <>
                   <div>
-                    <Label hint="A name to identify this agent">Agent name</Label>
-                    <Input value={agentName} onChange={(e) => setAgentName(e.target.value)} placeholder="e.g. Tech Blog Agent" />
+                    <Label hint="Give your agent a memorable name">Agent name</Label>
+                    <Input value={agentName} onChange={(e) => setAgentName(e.target.value)} placeholder="e.g., Tech Blog Agent" />
                   </div>
 
-                  {/* Mode picker — just 2 */}
+                  {/* Mode picker — clean and modern */}
                   <div>
-                    <Label>How should AI get content ideas?</Label>
-                    <div className="grid grid-cols-2 gap-3 mt-1">
+                    <Label>Content source</Label>
+                    <div className="grid grid-cols-2 gap-4 mt-2">
                       {([
-                        { key: "website" as const, label: "Website", desc: "Paste your URL — AI reads your site and builds a tailored content calendar", icon: "🌐" },
-                        { key: "data"    as const, label: "Your data", desc: "Paste topics, keywords, or notes — AI plans around what you give it", icon: "📝" },
+                        { key: "website" as const, label: "Website", desc: "Import from your website", icon: "🌐" },
+                        { key: "data"    as const, label: "Your topics", desc: "Use topics you provide", icon: "📝" },
                       ] as const).map((m) => (
-                        <button key={m.key} type="button" onClick={() => setMode(m.key)}
-                          className={`text-left p-4 border rounded-xl transition-all ${
-                            mode === m.key ? "border-blue-600 bg-blue-50" : "border-gray-100 hover:border-gray-300"
-                          }`}>
-                          <span className="text-xl block mb-1">{m.icon}</span>
-                          <p className={`text-sm font-semibold ${mode === m.key ? "text-blue-700" : "text-gray-800"}`}>{m.label}</p>
-                          <p className="text-xs text-gray-400 mt-0.5 leading-snug">{m.desc}</p>
+                        <button 
+                          key={m.key} 
+                          type="button" 
+                          onClick={() => setMode(m.key)}
+                          className="text-left p-5 border rounded-xl transition-all duration-200 cursor-pointer"
+                          style={{
+                            borderColor: mode === m.key ? "#3B82F6" : "#E2E8F0",
+                            backgroundColor: mode === m.key ? "rgba(59, 130, 246, 0.05)" : "#FFFFFF",
+                          }}
+                        >
+                          <span className="text-3xl block mb-3">{m.icon}</span>
+                          <p className="text-base font-semibold mb-1" style={{ color: mode === m.key ? "#3B82F6" : "#0F172A" }}>
+                            {m.label}
+                          </p>
+                          <p className="text-sm" style={{ color: "#64748B" }}>
+                            {m.desc}
+                          </p>
                         </button>
                       ))}
                     </div>
@@ -241,8 +308,8 @@ export default function CreatePage() {
 
                   {mode === "website" && (
                     <div>
-                      <Label hint="AI will scrape and analyse your site">Website URL</Label>
-                      <div className="flex gap-2">
+                      <Label hint="We'll analyze your site to understand your content style">Website URL</Label>
+                      <div className="flex gap-3">
                         <Input
                           type="url"
                           value={websiteUrl}
@@ -250,39 +317,56 @@ export default function CreatePage() {
                           placeholder="https://yoursite.com"
                           className="flex-1"
                         />
-                        <button type="button" onClick={handleScrape} disabled={scraping || !websiteUrl.trim()}
-                          className="px-3.5 py-2.5 text-sm font-medium border border-gray-200 rounded-lg hover:border-gray-400 transition-colors disabled:opacity-40 whitespace-nowrap">
-                          {scraping ? "Scanning…" : "Test"}
+                        <button 
+                          type="button" 
+                          onClick={handleScrape} 
+                          disabled={scraping || !websiteUrl.trim()}
+                          className="px-6 py-3 text-base font-semibold border rounded-lg transition-all whitespace-nowrap disabled:opacity-50 flex-shrink-0"
+                          style={{
+                            borderColor: "#E2E8F0",
+                            color: scraping ? "#64748B" : "#0F172A",
+                            backgroundColor: "#FFFFFF",
+                          }}
+                        >
+                          {scraping ? "Scanning…" : "Test URL"}
                         </button>
                       </div>
                       {scrapeInfo && (
-                        <div className="mt-2 p-3 bg-green-50 border border-green-100 rounded-lg text-xs text-gray-600">
-                          <p className="font-medium text-green-700 mb-0.5">✓ Site detected</p>
-                          <p className="font-semibold">{scrapeInfo.title}</p>
-                          {scrapeInfo.description && <p className="text-gray-400 mt-0.5">{scrapeInfo.description}</p>}
+                        <div className="mt-4 p-4 rounded-lg" style={{ backgroundColor: "rgba(34, 197, 94, 0.05)", borderLeft: "4px solid #22C55E" }}>
+                          <p className="font-semibold text-base mb-2" style={{ color: "#16A34A" }}>✓ Site detected</p>
+                          <p className="text-base font-medium" style={{ color: "#0F172A" }}>{scrapeInfo.title}</p>
+                          {scrapeInfo.description && (
+                            <p className="text-sm mt-2" style={{ color: "#64748B" }}>{scrapeInfo.description}</p>
+                          )}
                         </div>
                       )}
                       {scrapeError && (
-                        <p className="mt-2 text-xs text-red-500">{scrapeError}</p>
+                        <p className="mt-3 text-sm font-medium" style={{ color: "#DC2626" }}>✗ {scrapeError}</p>
                       )}
                     </div>
                   )}
 
                   {mode === "data" && (
                     <div>
-                      <Label hint="Topics, keywords, audience notes — anything that helps AI plan your content">Your topics / data</Label>
+                      <Label hint="Topics, keywords, or content themes you'd like to cover">Your topics</Label>
                       <Textarea
                         value={dataText}
                         onChange={(e) => setDataText(e.target.value)}
-                        placeholder={"e.g.\nAI tools for small businesses\nProductivity tips for remote teams\nStartup growth strategies"}
+                        placeholder={"e.g.\nAI tools for small businesses\nProductivity tips\nStartup growth strategies"}
                       />
                     </div>
                   )}
 
-                  <button type="button" onClick={() => setStep(1)}
-                    className="w-full bg-blue-600 text-white text-sm font-medium py-2.5 rounded-xl hover:bg-blue-700 transition-colors">
-                    Continue
-                  </button>
+                  <div className="pt-4">
+                    <button 
+                      type="button" 
+                      onClick={() => setStep(1)}
+                      className="w-full text-white text-base font-semibold py-3 rounded-lg transition-all hover:opacity-90"
+                      style={{ backgroundColor: "#3B82F6" }}
+                    >
+                      Continue to content settings
+                    </button>
+                  </div>
                 </>
               )}
 
@@ -290,76 +374,138 @@ export default function CreatePage() {
               {step === 1 && (
                 <>
                   <div>
-                    <Label>Duration — <span className="font-normal text-gray-500">{durationLabel}</span></Label>
-                    <input type="range" min={0.5} max={12} step={0.5} value={duration}
+                    <div className="flex items-center justify-between mb-4">
+                      <Label>Publishing duration</Label>
+                      <span className="text-lg font-semibold" style={{ color: "#3B82F6" }}>{durationLabel}</span>
+                    </div>
+                    <input 
+                      type="range" 
+                      min={0.5} 
+                      max={12} 
+                      step={0.5} 
+                      value={duration}
                       onChange={(e) => setDuration(Number(e.target.value))}
-                      className="w-full accent-blue-600 mt-1" />
-                    <div className="flex justify-between text-xs text-gray-400 mt-1"><span>2 weeks</span><span>12 months</span></div>
+                      className="w-full h-2 rounded-lg appearance-none cursor-pointer"
+                      style={{
+                        background: `linear-gradient(to right, #3B82F6 0%, #3B82F6 ${((duration - 0.5) / 11.5) * 100}%, #E2E8F0 ${((duration - 0.5) / 11.5) * 100}%, #E2E8F0 100%)`
+                      }}
+                    />
+                    <div className="flex justify-between text-xs font-medium mt-3" style={{ color: "#64748B" }}>
+                      <span>2 weeks</span>
+                      <span>12 months</span>
+                    </div>
                   </div>
 
                   <div>
-                    <Label>Posting frequency</Label>
-                    <div className="grid grid-cols-3 gap-2 mt-1">
+                    <Label>How often should we post?</Label>
+                    <div className="grid grid-cols-3 gap-2 mt-2">
                       {frequencies.map((f) => (
-                        <button key={f.value} type="button" onClick={() => setFrequency(f.value)}
-                          className={`text-left px-3 py-2.5 border rounded-xl transition-all ${
-                            frequency === f.value ? "border-blue-600 bg-blue-50" : "border-gray-100 hover:border-gray-300"
-                          }`}>
-                          <p className={`text-xs font-semibold ${frequency === f.value ? "text-blue-700" : "text-gray-800"}`}>{f.label}</p>
-                          <p className="text-[10px] text-gray-400 mt-0.5">{f.sub}</p>
+                        <button 
+                          key={f.value} 
+                          type="button" 
+                          onClick={() => setFrequency(f.value)}
+                          className="text-left p-4 border rounded-lg transition-all duration-200"
+                          style={{
+                            borderColor: frequency === f.value ? "#3B82F6" : "#E2E8F0",
+                            backgroundColor: frequency === f.value ? "rgba(59, 130, 246, 0.05)" : "#FFFFFF",
+                          }}
+                        >
+                          <p className="text-sm font-semibold" style={{ color: frequency === f.value ? "#3B82F6" : "#0F172A" }}>
+                            {f.label}
+                          </p>
+                          <p className="text-xs mt-1" style={{ color: "#94A3B8" }}>
+                            {f.sub}
+                          </p>
                         </button>
                       ))}
                     </div>
                   </div>
 
                   <div>
-                    <Label>Content length</Label>
-                    <div className="grid grid-cols-4 gap-2 mt-1">
+                    <Label>Typical article length</Label>
+                    <div className="grid grid-cols-4 gap-2 mt-2">
                       {lengths.map((l) => (
-                        <button key={l.value} type="button" onClick={() => setLength(l.value)}
-                          className={`text-center px-2 py-2.5 border rounded-xl transition-all ${
-                            length === l.value ? "border-blue-600 bg-blue-50" : "border-gray-100 hover:border-gray-300"
-                          }`}>
-                          <p className={`text-xs font-semibold ${length === l.value ? "text-blue-700" : "text-gray-800"}`}>{l.label}</p>
-                          <p className="text-[10px] text-gray-400 mt-0.5">{l.sub}</p>
+                        <button 
+                          key={l.value} 
+                          type="button" 
+                          onClick={() => setLength(l.value)}
+                          className="text-center p-4 border rounded-lg transition-all duration-200"
+                          style={{
+                            borderColor: length === l.value ? "#3B82F6" : "#E2E8F0",
+                            backgroundColor: length === l.value ? "rgba(59, 130, 246, 0.05)" : "#FFFFFF",
+                          }}
+                        >
+                          <p className="text-sm font-semibold" style={{ color: length === l.value ? "#3B82F6" : "#0F172A" }}>
+                            {l.label}
+                          </p>
+                          <p className="text-xs mt-1" style={{ color: "#94A3B8" }}>
+                            {l.sub}
+                          </p>
                         </button>
                       ))}
                     </div>
                   </div>
 
                   <div>
-                    <Label>Tone</Label>
-                    <div className="flex flex-wrap gap-2 mt-1">
+                    <Label>Writing tone</Label>
+                    <div className="flex flex-wrap gap-2 mt-2">
                       {tones.map((t) => (
-                        <button key={t} type="button" onClick={() => setTone(t)}
-                          className={`text-xs px-3.5 py-1.5 rounded-full border capitalize transition-all ${
-                            tone === t ? "bg-blue-600 text-white border-blue-600" : "border-gray-200 text-gray-500 hover:border-gray-400"
-                          }`}>
+                        <button 
+                          key={t} 
+                          type="button" 
+                          onClick={() => setTone(t)}
+                          className="px-4 py-2 text-sm font-semibold rounded-full border transition-all duration-200 capitalize"
+                          style={{
+                            borderColor: tone === t ? "#3B82F6" : "#E2E8F0",
+                            backgroundColor: tone === t ? "#3B82F6" : "#FFFFFF",
+                            color: tone === t ? "#FFFFFF" : "#0F172A",
+                          }}
+                        >
                           {t}
                         </button>
                       ))}
                     </div>
                   </div>
 
-                  <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="grid sm:grid-cols-2 gap-6">
                     <div>
-                      <Label hint="Who are you writing for?">Target audience</Label>
-                      <Input value={audience} onChange={(e) => setAudience(e.target.value)} placeholder="e.g. startup founders" />
+                      <Label hint="Who is your target reader?">Target audience</Label>
+                      <Input 
+                        value={audience} 
+                        onChange={(e) => setAudience(e.target.value)} 
+                        placeholder="e.g., startup founders, marketers"
+                      />
                     </div>
                     <div>
-                      <Label>Language</Label>
-                      <Input value={language} onChange={(e) => setLanguage(e.target.value)} placeholder="English" />
+                      <Label>Publishing language</Label>
+                      <Input 
+                        value={language} 
+                        onChange={(e) => setLanguage(e.target.value)} 
+                        placeholder="English"
+                      />
                     </div>
                   </div>
 
-                  <div className="flex gap-3">
-                    <button type="button" onClick={() => setStep(0)}
-                      className="flex-1 border border-gray-200 text-gray-600 text-sm font-medium py-2.5 rounded-xl hover:border-gray-400 transition-colors">
+                  <div className="flex gap-3 pt-4">
+                    <button 
+                      type="button" 
+                      onClick={() => setStep(0)}
+                      className="flex-1 text-base font-semibold py-3 rounded-lg border transition-all"
+                      style={{
+                        borderColor: "#E2E8F0",
+                        color: "#0F172A",
+                        backgroundColor: "#FFFFFF",
+                      }}
+                    >
                       Back
                     </button>
-                    <button type="button" onClick={() => setStep(2)}
-                      className="flex-1 bg-blue-600 text-white text-sm font-medium py-2.5 rounded-xl hover:bg-blue-700 transition-colors">
-                      Continue
+                    <button 
+                      type="button" 
+                      onClick={() => setStep(2)}
+                      className="flex-1 text-white text-base font-semibold py-3 rounded-lg transition-all hover:opacity-90"
+                      style={{ backgroundColor: "#3B82F6" }}
+                    >
+                      Continue to brand settings
                     </button>
                   </div>
                 </>
@@ -369,57 +515,104 @@ export default function CreatePage() {
               {step === 2 && (
                 <>
                   <div>
-                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">Brand — optional</p>
-                    <div className="space-y-4">
+                    <p className="text-xs font-semibold uppercase tracking-widest mb-6" style={{ color: "#94A3B8" }}>
+                      Brand information (optional)
+                    </p>
+                    <div className="space-y-6">
                       <div>
-                        <Label hint="AI will mention your brand naturally in content">Brand name</Label>
-                        <Input value={brandName} onChange={(e) => setBrandName(e.target.value)} placeholder="Acme Inc." />
+                        <Label hint="We'll naturally mention your brand in content">Brand name</Label>
+                        <Input 
+                          value={brandName} 
+                          onChange={(e) => setBrandName(e.target.value)} 
+                          placeholder="Acme Inc."
+                        />
                       </div>
                       <div>
-                        <Label>Brand description</Label>
-                        <Input value={brandDesc} onChange={(e) => setBrandDesc(e.target.value)} placeholder="What your brand does" />
+                        <Label hint="What does your brand do?">Brand description</Label>
+                        <Input 
+                          value={brandDesc} 
+                          onChange={(e) => setBrandDesc(e.target.value)} 
+                          placeholder="A brief description of your business"
+                        />
                       </div>
                     </div>
                   </div>
 
                   {/* Summary */}
-                  <div className="bg-gray-50 rounded-xl p-4 text-xs space-y-1.5">
-                    <p className="font-semibold text-gray-700 text-sm mb-2">Summary</p>
-                    <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
-                      <span className="text-gray-400">Name</span>
-                      <span className="text-gray-700 font-medium">{agentName || "My Blog Agent"}</span>
-                      <span className="text-gray-400">Mode</span>
-                      <span className="text-gray-700 font-medium">{mode === "website" ? "Website" : "Your data"}</span>
-                      <span className="text-gray-400">Duration</span>
-                      <span className="text-gray-700 font-medium">{durationLabel}</span>
-                      <span className="text-gray-400">Frequency</span>
-                      <span className="text-gray-700 font-medium">{frequency.replace(/-/g, " ")}</span>
-                      <span className="text-gray-400">Length</span>
-                      <span className="text-gray-700 font-medium capitalize">{length}</span>
-                      <span className="text-gray-400">Tone</span>
-                      <span className="text-gray-700 font-medium capitalize">{tone}</span>
+                  <div className="p-6 rounded-xl" style={{ backgroundColor: "#F1F5F9", borderLeft: "4px solid #3B82F6" }}>
+                    <p className="text-sm font-semibold mb-4" style={{ color: "#0F172A" }}>Summary of your agent</p>
+                    <div className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
+                      <div>
+                        <p style={{ color: "#64748B" }}>Name</p>
+                        <p className="font-semibold mt-1" style={{ color: "#0F172A" }}>
+                          {agentName || "My Blog Agent"}
+                        </p>
+                      </div>
+                      <div>
+                        <p style={{ color: "#64748B" }}>Mode</p>
+                        <p className="font-semibold mt-1" style={{ color: "#0F172A" }}>
+                          {mode === "website" ? "Website" : "Your topics"}
+                        </p>
+                      </div>
+                      <div>
+                        <p style={{ color: "#64748B" }}>Duration</p>
+                        <p className="font-semibold mt-1" style={{ color: "#0F172A" }}>{durationLabel}</p>
+                      </div>
+                      <div>
+                        <p style={{ color: "#64748B" }}>Frequency</p>
+                        <p className="font-semibold mt-1" style={{ color: "#0F172A" }}>
+                          {frequency.replace(/-/g, " ")}
+                        </p>
+                      </div>
+                      <div>
+                        <p style={{ color: "#64748B" }}>Length</p>
+                        <p className="font-semibold mt-1 capitalize" style={{ color: "#0F172A" }}>{length}</p>
+                      </div>
+                      <div>
+                        <p style={{ color: "#64748B" }}>Tone</p>
+                        <p className="font-semibold mt-1 capitalize" style={{ color: "#0F172A" }}>{tone}</p>
+                      </div>
                     </div>
                   </div>
 
-                  {error && <p className="text-sm text-red-500">{error}</p>}
+                  {error && (
+                    <div className="p-4 rounded-lg" style={{ backgroundColor: "rgba(220, 38, 38, 0.05)", borderLeft: "4px solid #DC2626" }}>
+                      <p className="text-sm font-medium" style={{ color: "#DC2626" }}>{error}</p>
+                    </div>
+                  )}
 
-                  <div className="flex gap-3">
-                    <button type="button" onClick={() => setStep(1)}
-                      className="flex-1 border border-gray-200 text-gray-600 text-sm font-medium py-2.5 rounded-xl hover:border-gray-400 transition-colors">
+                  <div className="flex gap-3 pt-4">
+                    <button 
+                      type="button" 
+                      onClick={() => setStep(1)}
+                      className="flex-1 text-base font-semibold py-3 rounded-lg border transition-all"
+                      style={{
+                        borderColor: "#E2E8F0",
+                        color: "#0F172A",
+                        backgroundColor: "#FFFFFF",
+                      }}
+                    >
                       Back
                     </button>
-                    <button type="button" onClick={submit} disabled={loading}
-                      className="flex-1 bg-blue-600 text-white text-sm font-medium py-2.5 rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-60">
-                      {loading ? "Generating schedule…" : "Create agent"}
+                    <button 
+                      type="button" 
+                      onClick={submit} 
+                      disabled={loading}
+                      className="flex-1 text-white text-base font-semibold py-3 rounded-lg transition-all hover:opacity-90 disabled:opacity-60"
+                      style={{ backgroundColor: "#3B82F6" }}
+                    >
+                      {loading ? "Creating your agent…" : "Create agent"}
                     </button>
                   </div>
 
                   {loading && (
-                    <p className="text-center text-xs text-gray-400 -mt-2">This takes ~30 seconds. Please wait.</p>
+                    <p className="text-center text-sm" style={{ color: "#64748B" }}>
+                      Building your content calendar. This takes about 30 seconds.
+                    </p>
                   )}
                 </>
               )}
-
+              </div>
             </div>
           </>
         )}
@@ -427,4 +620,5 @@ export default function CreatePage() {
     </div>
   );
 }
+
 
